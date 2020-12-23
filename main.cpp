@@ -33,14 +33,6 @@
 
 #include <QtCore/QCoreApplication>
 
-//int main(int argc, char *argv[])
-//{
-//    QCoreApplication a(argc, argv);
-
-//    return a.exec();
-//    //    return 0;
-//}
-
 /*******************************************************
  A simple program that demonstrates the Eigen library.
  The program defines a random symmetric matrix
@@ -55,6 +47,8 @@
 // the following two are needed for printing
 #include <iostream>
 #include <iomanip>
+#include <cstdint>
+#include <cstdarg>
 /**************************************
 /* The Eigen include files         */
 #include <Eigen/Core>
@@ -69,41 +63,36 @@ int main(int argc, char **argv) {
 
     QCoreApplication a(argc, argv);
 
-    int numVals = 9;
-    double x[] = {1.0, 1.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0, 0.0};
-    double y[] = {1.0, -1.0, 1.0, -1.0, 0.0, 0.0, 0.0, 1.0, -1.0};
-    double meanX, meanY;
-    meanX = meanY = 0.0;
-    double f1[] = {1.0, -0.5, 1.0, 1.0, -1.0, 0.0, 0.0, 0.0, 0.0};
-    double f2[] = {1.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0, -1.0, 1.0};
-
-    for(int i = 0; i < numVals; ++i)
+    float x[] = {1.0, 1.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0, 0.0},y[] = {1.0, -1.0, 1.0, -1.0, 0.0, 0.0, 0.0, 1.0, -1.0};
+    float meanX=0, meanY=0;
+    float f1[] = {1.0, -0.5, 1.0, 1.0, -1.0, 0.0, 0.0, 0.0, 0.0},f2[] = {1.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0, -1.0, 1.0};
+    uint8_t i, numVals=9;
+ 
+    for(i = 0; i < numVals; ++i)
     {
         meanX += x[i];
         meanY += y[i];
     }
-    meanX /= (double)numVals;
-    meanY /= (double)numVals;
+    meanX /= (float)numVals;
+    meanY /= (float)numVals;
 
-    int M = 6, N = 1;
+    uint8_t M = 6, N = 1;
     MatrixXd Xres(M,M);
     MatrixXd xvec1(M,1);
     MatrixXd xvec2(M,1);
 
-    double eps = 0.0001;
+    float eps = 0.0001;
 
-    for(int i = 0; i < numVals; ++i)
+    for(i = 0; i < numVals; ++i)
     {
-        double xd = meanX-x[i];
-        double yd = meanY-y[i];
-        double d = sqrt(xd*xd+yd*yd);
-        double td = 1.0 / (d*d + eps*eps);
+        float xd = meanX-x[i],yd = meanY-y[i],
+        float d = sqrt(xd*xd+yd*yd);
+        float td = 1.0 / (d*d + eps*eps);
 
         /* MatrixXd X(M,N); // Define an M x N general matrix */
         VectorXd X(M); // Define an M x N general matrix
 
-        double xi = x[i] - meanX;
-        double yi = y[i] - meanY;
+        float xi = x[i] - meanX,yi = y[i] - meanY;   
         X(0) = 1.0;
         X(1) = xi;
         X(2) = yi;
